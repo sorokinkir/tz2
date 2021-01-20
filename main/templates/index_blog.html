@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Главная страница{% endblock title %}
+
+{% block content %}
+  <div class="container text-center">
+    <h2>Наши авторы</h2>
+    {% for user in users %}
+      <span>| {{ user.user }} |</span>
+    {% endfor %}
+  </div>
+  <hr>
+  <div class="container pb-2 py-2">
+      {% for note in object_list %}
+      <div class="card">
+        <div class="card-header">
+          <p class="card-text">Автор: {{ note.author }} <br><i class="far fa-clock pr-2"></i>{{ note.date | date:"d/m/Y" }}</p>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ note.title }}</h5>
+          <p class="card-text">{{ note.text|truncatechars:200 }}</p>
+          <a href="{% url 'main:detail_blog' note.pk %}" class="btn btn-primary">Узнать больше</a>
+        </div>
+      </div>
+      <hr>
+      {% endfor %}
+  </div>
+
+  <div class="container">
+    <nav class="Page navigation align-content-center">
+      <ul class="pagination pg-blue justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a></li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Предыдущая</span>
+        </li>
+        {% endif %}
+        
+        {% for i in paginator.page_range %}
+          {% if page_obj.number == i %}
+            <li class="page-item active">
+              <span class="page-link">
+                {{ i }}
+                <span class="sr-only">(current)</span>
+              </span>
+            </li>
+            {% else %}
+              <li class="page-item""><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a></li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Следующая</span>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+  <hr>
+{% endblock content %}
